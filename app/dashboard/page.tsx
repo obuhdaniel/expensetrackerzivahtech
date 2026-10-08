@@ -2,12 +2,11 @@ import { redirect } from "next/navigation";
 import type { SupabaseClient } from "@supabase/supabase-js";
 import { createClient } from "@/lib/supabase/server";
 import type { Database } from "@/lib/supabase/database.types";
-import { logout } from "@/lib/actions/auth";
 import { AddExpenseForm } from "./expense-form";
+import { ExpenseSummaryCard } from "./expense-summary-card";
 import { ExpenseTable } from "./expense-table";
 import { ExpenseToolbar } from "./expense-toolbar";
 import { Pagination } from "./pagination";
-import { ToastProvider } from "./toast-provider";
 import type { Expense } from "./expense-row";
 import {
   buildExpenseHref,
@@ -20,7 +19,6 @@ import {
   type SortKey,
 } from "@/lib/expense-query";
 import {
-  formatDate,
   formatNaira,
   toDateInputValue,
 } from "@/lib/format";
@@ -89,12 +87,6 @@ export default async function DashboardPage({ searchParams }: PageProps<"/dashbo
   const params = await searchParams;
   const query = parseExpenseQuery(params);
 
-  const { data: profile } = await supabase
-    .from("profiles")
-    .select("full_name, date_of_birth, created_at")
-    .eq("id", user.id)
-    .single();
-
   const now = new Date();
   const monthStart = toDateInputValue(
     new Date(now.getFullYear(), now.getMonth(), 1)
@@ -162,43 +154,9 @@ export default async function DashboardPage({ searchParams }: PageProps<"/dashbo
   const isFiltered = hasActiveFilters(query);
   const sortHrefs = sortHrefsFor(query);
 
-  const name = String(profile?.full_name ?? user.user_metadata?.name ?? "User");
-  const initials = name
-    .split(" ")
-    .map((part: string) => part[0])
-    .join("")
-    .slice(0, 2)
-    .toUpperCase();
-
   return (
-    <ToastProvider>
-      <div className="min-h-screen bg-zinc-50 dark:bg-black">
-        <header className="flex items-center justify-between border-b border-zinc-200 bg-white px-6 py-4 dark:border-zinc-800 dark:bg-zinc-900">
-          <span className="text-lg font-semibold tracking-tight">Bext</span>
-          <form action={logout}>
-            <button
-              type="submit"
-              className="rounded-lg border border-zinc-300 px-4 py-2 text-sm font-medium text-zinc-700 transition-colors hover:bg-zinc-100 dark:border-zinc-700 dark:text-zinc-200 dark:hover:bg-zinc-800"
-            >
-              Log out
-            </button>
-          </form>
-        </header>
+    <div className="mx-auto max-w-5xl space-y-6">
 
-        <main className="mx-auto max-w-4xl space-y-6 px-6 py-10">
-          <div className="rounded-3xl border border-zinc-200 bg-white p-6 shadow-sm dark:border-zinc-800 dark:bg-zinc-900">
-            <div className="flex items-center gap-4">
-              <div className="flex h-12 w-12 items-center justify-center rounded-full bg-zinc-900 text-base font-semibold text-white dark:bg-white dark:text-zinc-900">
-                {initials}
-              </div>
-              <div>
-                <h1 className="text-xl font-semibold tracking-tight">{name}</h1>
-                <p className="text-sm text-zinc-500 dark:text-zinc-400">
-                  {user.email} · Member since {formatDate(user.created_at)}
-                </p>
-              </div>
-            </div>
-          </div>
 
           <div className="grid gap-4 sm:grid-cols-2">
             <div className="rounded-3xl border border-zinc-200 bg-white p-6 shadow-sm dark:border-zinc-800 dark:bg-zinc-900">
@@ -226,9 +184,11 @@ export default async function DashboardPage({ searchParams }: PageProps<"/dashbo
             </div>
           </div>
 
+<ExpenseSummaryCard monthLabel={monthLabel} />
+
           <div className="rounded-3xl border border-zinc-200 bg-white p-6 shadow-sm dark:border-zinc-800 dark:bg-zinc-900">
             <h2 className="text-lg font-semibold tracking-tight">
-              Spending by category
+              Expenses
             </h2>
             {breakdown.length === 0 ? (
               <p className="mt-4 text-sm text-zinc-500 dark:text-zinc-400">
@@ -298,8 +258,6 @@ export default async function DashboardPage({ searchParams }: PageProps<"/dashbo
               />
             </div>
           </div>
-        </main>
-      </div>
-    </ToastProvider>
+        </div>
   );
 }
