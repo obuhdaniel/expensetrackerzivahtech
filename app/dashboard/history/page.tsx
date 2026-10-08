@@ -1,6 +1,11 @@
 import { redirect } from "next/navigation";
+import type { Metadata } from "next";
 import { createClient } from "@/lib/supabase/server";
 import { formatDate, formatNaira } from "@/lib/format";
+
+export const metadata: Metadata = {
+  title: "History",
+};
 
 export default async function HistoryPage() {
   const supabase = await createClient();

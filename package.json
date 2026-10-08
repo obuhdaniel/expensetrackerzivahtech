@@ -1,7 +1,8 @@
 {
-  "name": "bextproject",
+  "name": "zivah-expense-manager",
   "version": "0.1.0",
   "private": true,
+  "description": "Zivah Expense Manager - track expenses, review spending history, and get AI-powered summaries.",
   "scripts": {
     "dev": "next dev",
     "build": "next build",

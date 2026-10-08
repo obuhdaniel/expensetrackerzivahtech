@@ -37,7 +37,9 @@ export default async function DashboardLayout({
         <div className="flex min-h-screen">
           <aside className="fixed inset-y-0 left-0 z-10 flex w-64 flex-col border-r border-zinc-200 bg-white dark:border-zinc-800 dark:bg-zinc-900">
             <div className="flex h-16 items-center border-b border-zinc-200 px-6 dark:border-zinc-800">
-              <span className="text-lg font-semibold tracking-tight">Bext</span>
+              <span className="text-base font-semibold tracking-tight">
+                Zivah Expense Manager
+              </span>
             </div>
 
             <div className="flex flex-1 flex-col justify-between">

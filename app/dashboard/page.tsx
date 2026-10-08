@@ -1,4 +1,5 @@
 import { redirect } from "next/navigation";
+import type { Metadata } from "next";
 import type { SupabaseClient } from "@supabase/supabase-js";
 import { createClient } from "@/lib/supabase/server";
 import type { Database } from "@/lib/supabase/database.types";
@@ -22,6 +23,10 @@ import {
   formatNaira,
   toDateInputValue,
 } from "@/lib/format";
+
+export const metadata: Metadata = {
+  title: "Dashboard",
+};
 
 const CATEGORY_COLORS: Record<string, string> = {
   Food: "bg-emerald-500",
