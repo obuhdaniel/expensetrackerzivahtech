@@ -15,11 +15,11 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: {
-    default: "Zivah Expense Manager",
-    template: "%s | Zivah Expense Manager",
+    default: "KippaMe — Track every naira, know where it goes",
+    template: "%s | KippaMe",
   },
   description:
-    "Zivah Expense Manager helps you track daily expenses, review spending history, and get AI-powered summaries of where your money goes.",
+    "KippaMe is a simple personal expense tracker. Log daily spending, see your spending by category, and get AI-powered summaries of where your money goes.",
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {

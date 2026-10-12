@@ -38,7 +38,7 @@ export default async function DashboardLayout({
           <aside className="fixed inset-y-0 left-0 z-10 flex w-64 flex-col border-r border-zinc-200 bg-white dark:border-zinc-800 dark:bg-zinc-900">
             <div className="flex h-16 items-center border-b border-zinc-200 px-6 dark:border-zinc-800">
               <span className="text-base font-semibold tracking-tight">
-                Zivah Expense Manager
+                KippaMe
               </span>
             </div>
 
