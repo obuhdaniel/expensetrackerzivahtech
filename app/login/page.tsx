@@ -1,6 +1,7 @@
 "use client";
 
 import { useActionState } from "react";
+import Image from "next/image";
 import Link from "next/link";
 import { login, type AuthState } from "@/lib/actions/auth";
 
@@ -10,75 +11,119 @@ export default function LoginPage() {
   const [state, formAction, pending] = useActionState(login, initialState);
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-zinc-50 px-4 dark:bg-black">
-      <div className="w-full max-w-md rounded-3xl border border-zinc-200 bg-white p-8 shadow-sm dark:border-zinc-800 dark:bg-zinc-900">
-        <h1 className="text-2xl font-semibold tracking-tight">Welcome back</h1>
-        <p className="mt-1 text-sm text-zinc-500 dark:text-zinc-400">
-          Log in to your account to continue.
-        </p>
+    <main className="relative flex min-h-screen items-center justify-center overflow-hidden bg-background px-4 py-12 sm:px-6">
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute -top-40 -right-32 h-[30rem] w-[30rem] rounded-full bg-lime/35 blur-3xl"
+      />
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute -bottom-48 -left-32 h-[30rem] w-[30rem] rounded-full bg-gold/20 blur-3xl"
+      />
 
-        <form action={formAction} className="mt-8 space-y-4">
-          <div className="space-y-2">
-            <label
-              htmlFor="email"
-              className="block text-sm font-medium text-zinc-700 dark:text-zinc-300"
-            >
-              Email
-            </label>
-            <input
-              id="email"
-              name="email"
-              type="email"
-              autoComplete="email"
-              required
-              placeholder="you@example.com"
-              className="w-full rounded-xl border border-zinc-300 bg-white px-4 py-2.5 text-sm text-zinc-900 placeholder:text-zinc-400 focus:border-zinc-900 focus:outline-none focus:ring-1 focus:ring-zinc-900 dark:border-zinc-700 dark:bg-zinc-950 dark:text-zinc-100"
-            />
-          </div>
+      <div className="relative w-full max-w-md">
+        <Link
+          href="/"
+          aria-label="KippaMe home"
+          className="mx-auto mb-8 flex w-fit items-center justify-center"
+        >
+          <Image
+            src="/logo.png"
+            alt="KippaMe"
+            width={943}
+            height={265}
+            priority
+            className="h-11 w-auto"
+          />
+        </Link>
 
-          <div className="space-y-2">
-            <label
-              htmlFor="password"
-              className="block text-sm font-medium text-zinc-700 dark:text-zinc-300"
-            >
-              Password
-            </label>
-            <input
-              id="password"
-              name="password"
-              type="password"
-              autoComplete="current-password"
-              required
-              placeholder="••••••••"
-              className="w-full rounded-xl border border-zinc-300 bg-white px-4 py-2.5 text-sm text-zinc-900 placeholder:text-zinc-400 focus:border-zinc-900 focus:outline-none focus:ring-1 focus:ring-zinc-900 dark:border-zinc-700 dark:bg-zinc-950 dark:text-zinc-100"
-            />
-          </div>
-
-          {state.error && (
-            <p className="rounded-lg bg-red-50 px-3 py-2 text-sm text-red-600 dark:bg-red-950/50 dark:text-red-400">
-              {state.error}
+        <div className="rounded-card border border-border bg-surface p-6 shadow-xl shadow-forest/5 sm:p-8">
+          <div className="text-center">
+            <span className="inline-flex rounded-full border border-primary/15 bg-surface-muted px-3 py-1 text-xs font-semibold uppercase tracking-wider text-primary">
+              Welcome back
+            </span>
+            <h1 className="mt-4 text-3xl font-bold tracking-tight text-text">
+              Log in to KippaMe
+            </h1>
+            <p className="mt-2 text-sm text-text-muted">
+              Continue tracking where every naira goes.
             </p>
-          )}
+          </div>
 
-          <button
-            type="submit"
-            disabled={pending}
-            className="w-full rounded-xl bg-zinc-900 py-2.5 text-sm font-medium text-white transition-colors hover:bg-zinc-700 disabled:cursor-not-allowed disabled:opacity-60 dark:bg-white dark:text-zinc-900 dark:hover:bg-zinc-200"
-          >
-            {pending ? "Logging in..." : "Log in"}
-          </button>
-        </form>
+          <form action={formAction} className="mt-8 space-y-5">
+            <div className="space-y-2">
+              <label
+                htmlFor="email"
+                className="block text-sm font-medium text-text"
+              >
+                Email
+              </label>
+              <input
+                id="email"
+                name="email"
+                type="email"
+                autoComplete="email"
+                required
+                placeholder="you@example.com"
+                className="w-full rounded-button border border-border bg-surface px-4 py-3 text-sm text-text placeholder:text-text-muted focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/15"
+              />
+            </div>
 
-        <p className="mt-6 text-center text-sm text-zinc-500 dark:text-zinc-400">
-          Don&apos;t have an account?{" "}
-          <Link
-            href="/register"
-            className="font-medium text-zinc-900 underline-offset-4 hover:underline dark:text-zinc-100"
-          >
-            Register here
-          </Link>
-        </p>
+            <div className="space-y-2">
+              <label
+                htmlFor="password"
+                className="block text-sm font-medium text-text"
+              >
+                Password
+              </label>
+              <input
+                id="password"
+                name="password"
+                type="password"
+                autoComplete="current-password"
+                required
+                placeholder="••••••••"
+                className="w-full rounded-button border border-border bg-surface px-4 py-3 text-sm text-text placeholder:text-text-muted focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/15"
+              />
+            </div>
+
+            {state.error && (
+              <p
+                role="alert"
+                className="rounded-button bg-expense/10 px-3 py-2.5 text-sm text-expense"
+              >
+                {state.error}
+              </p>
+            )}
+
+            <button
+              type="submit"
+              disabled={pending}
+              className="w-full rounded-button bg-primary py-3 text-sm font-semibold text-white shadow-sm transition-colors hover:bg-primary-hover disabled:cursor-not-allowed disabled:opacity-60"
+            >
+              {pending ? "Logging in..." : "Log in"}
+            </button>
+          </form>
+
+          <p className="mt-6 text-center text-sm text-text-muted">
+            Don&apos;t have an account?{" "}
+            <Link
+              href="/register"
+              className="font-semibold text-primary underline-offset-4 hover:underline"
+            >
+              Create one
+            </Link>
+          </p>
+        </div>
+
+        <Link
+          href="/"
+          className="mx-auto mt-6 flex w-fit items-center gap-2 text-sm font-medium text-text-muted transition-colors hover:text-primary"
+        >
+          <span aria-hidden="true">←</span>
+          Back to home
+        </Link>
       </div>
-    </div>
+    </main>
   );
 }

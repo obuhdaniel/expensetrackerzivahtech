@@ -1,142 +1,179 @@
 "use client";
 
 import { useActionState } from "react";
+import Image from "next/image";
 import Link from "next/link";
 import { register, type AuthState } from "@/lib/actions/auth";
 
 const initialState: AuthState = {};
 
 const inputClass =
-  "w-full rounded-xl border border-zinc-300 bg-white px-4 py-2.5 text-sm text-zinc-900 placeholder:text-zinc-400 focus:border-zinc-900 focus:outline-none focus:ring-1 focus:ring-zinc-900 dark:border-zinc-700 dark:bg-zinc-950 dark:text-zinc-100";
+  "w-full rounded-button border border-border bg-surface px-4 py-3 text-sm text-text placeholder:text-text-muted focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/15";
 
 export default function RegisterPage() {
   const [state, formAction, pending] = useActionState(register, initialState);
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-zinc-50 px-4 py-16 dark:bg-black">
-      <div className="w-full max-w-md rounded-3xl border border-zinc-200 bg-white p-8 shadow-sm dark:border-zinc-800 dark:bg-zinc-900">
-        <h1 className="text-2xl font-semibold tracking-tight">
-          Create your account
-        </h1>
-        <p className="mt-1 text-sm text-zinc-500 dark:text-zinc-400">
-          Sign up with your details to get started.
-        </p>
+    <main className="relative flex min-h-screen items-center justify-center overflow-hidden bg-background px-4 py-12 sm:px-6">
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute -top-40 -right-32 h-[30rem] w-[30rem] rounded-full bg-lime/35 blur-3xl"
+      />
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute -bottom-48 -left-32 h-[30rem] w-[30rem] rounded-full bg-gold/20 blur-3xl"
+      />
 
-        <form action={formAction} className="mt-8 space-y-4">
-          <div className="space-y-2">
-            <label
-              htmlFor="name"
-              className="block text-sm font-medium text-zinc-700 dark:text-zinc-300"
-            >
-              Name
-            </label>
-            <input
-              id="name"
-              name="name"
-              type="text"
-              autoComplete="name"
-              required
-              placeholder="Jane Doe"
-              className={inputClass}
-            />
-          </div>
+      <div className="relative w-full max-w-md">
+        <Link
+          href="/"
+          aria-label="KippaMe home"
+          className="mx-auto mb-8 flex w-fit items-center justify-center"
+        >
+          <Image
+            src="/logo.png"
+            alt="KippaMe"
+            width={943}
+            height={265}
+            priority
+            className="h-11 w-auto"
+          />
+        </Link>
 
-          <div className="space-y-2">
-            <label
-              htmlFor="email"
-              className="block text-sm font-medium text-zinc-700 dark:text-zinc-300"
-            >
-              Email
-            </label>
-            <input
-              id="email"
-              name="email"
-              type="email"
-              autoComplete="email"
-              required
-              placeholder="you@example.com"
-              className={inputClass}
-            />
-          </div>
-
-          <div className="space-y-2">
-            <label
-              htmlFor="dateOfBirth"
-              className="block text-sm font-medium text-zinc-700 dark:text-zinc-300"
-            >
-              Date of birth
-            </label>
-            <input
-              id="dateOfBirth"
-              name="dateOfBirth"
-              type="date"
-              required
-              className={inputClass}
-            />
-          </div>
-
-          <div className="space-y-2">
-            <label
-              htmlFor="password"
-              className="block text-sm font-medium text-zinc-700 dark:text-zinc-300"
-            >
-              Password
-            </label>
-            <input
-              id="password"
-              name="password"
-              type="password"
-              autoComplete="new-password"
-              required
-              minLength={8}
-              placeholder="At least 8 characters"
-              className={inputClass}
-            />
-          </div>
-
-          <div className="space-y-2">
-            <label
-              htmlFor="confirmPassword"
-              className="block text-sm font-medium text-zinc-700 dark:text-zinc-300"
-            >
-              Confirm password
-            </label>
-            <input
-              id="confirmPassword"
-              name="confirmPassword"
-              type="password"
-              autoComplete="new-password"
-              required
-              placeholder="Repeat your password"
-              className={inputClass}
-            />
-          </div>
-
-          {state.error && (
-            <p className="rounded-lg bg-red-50 px-3 py-2 text-sm text-red-600 dark:bg-red-950/50 dark:text-red-400">
-              {state.error}
+        <div className="rounded-card border border-border bg-surface p-6 shadow-xl shadow-forest/5 sm:p-8">
+          <div className="text-center">
+            <span className="inline-flex rounded-full border border-primary/15 bg-surface-muted px-3 py-1 text-xs font-semibold uppercase tracking-wider text-primary">
+              Get started
+            </span>
+            <h1 className="mt-4 text-3xl font-bold tracking-tight text-text">
+              Create your account
+            </h1>
+            <p className="mt-2 text-sm text-text-muted">
+              Start tracking where every naira goes.
             </p>
-          )}
+          </div>
 
-          <button
-            type="submit"
-            disabled={pending}
-            className="w-full rounded-xl bg-zinc-900 py-2.5 text-sm font-medium text-white transition-colors hover:bg-zinc-700 disabled:cursor-not-allowed disabled:opacity-60 dark:bg-white dark:text-zinc-900 dark:hover:bg-zinc-200"
-          >
-            {pending ? "Creating account..." : "Create account"}
-          </button>
-        </form>
+          <form action={formAction} className="mt-8 space-y-5">
+            <div className="space-y-2">
+              <label htmlFor="name" className="block text-sm font-medium text-text">
+                Name
+              </label>
+              <input
+                id="name"
+                name="name"
+                type="text"
+                autoComplete="name"
+                required
+                placeholder="Jane Doe"
+                className={inputClass}
+              />
+            </div>
 
-        <p className="mt-6 text-center text-sm text-zinc-500 dark:text-zinc-400">
-          Already have an account?{" "}
-          <Link
-            href="/login"
-            className="font-medium text-zinc-900 underline-offset-4 hover:underline dark:text-zinc-100"
-          >
-            Log in
-          </Link>
-        </p>
+            <div className="space-y-2">
+              <label htmlFor="email" className="block text-sm font-medium text-text">
+                Email
+              </label>
+              <input
+                id="email"
+                name="email"
+                type="email"
+                autoComplete="email"
+                required
+                placeholder="you@example.com"
+                className={inputClass}
+              />
+            </div>
+
+            <div className="space-y-2">
+              <label
+                htmlFor="dateOfBirth"
+                className="block text-sm font-medium text-text"
+              >
+                Date of birth
+              </label>
+              <input
+                id="dateOfBirth"
+                name="dateOfBirth"
+                type="date"
+                required
+                className={inputClass}
+              />
+            </div>
+
+            <div className="space-y-2">
+              <label
+                htmlFor="password"
+                className="block text-sm font-medium text-text"
+              >
+                Password
+              </label>
+              <input
+                id="password"
+                name="password"
+                type="password"
+                autoComplete="new-password"
+                required
+                minLength={8}
+                placeholder="At least 8 characters"
+                className={inputClass}
+              />
+            </div>
+
+            <div className="space-y-2">
+              <label
+                htmlFor="confirmPassword"
+                className="block text-sm font-medium text-text"
+              >
+                Confirm password
+              </label>
+              <input
+                id="confirmPassword"
+                name="confirmPassword"
+                type="password"
+                autoComplete="new-password"
+                required
+                placeholder="Repeat your password"
+                className={inputClass}
+              />
+            </div>
+
+            {state.error && (
+              <p
+                role="alert"
+                className="rounded-button bg-expense/10 px-3 py-2.5 text-sm text-expense"
+              >
+                {state.error}
+              </p>
+            )}
+
+            <button
+              type="submit"
+              disabled={pending}
+              className="w-full rounded-button bg-primary py-3 text-sm font-semibold text-white shadow-sm transition-colors hover:bg-primary-hover disabled:cursor-not-allowed disabled:opacity-60"
+            >
+              {pending ? "Creating account..." : "Create account"}
+            </button>
+          </form>
+
+          <p className="mt-6 text-center text-sm text-text-muted">
+            Already have an account?{" "}
+            <Link
+              href="/login"
+              className="font-semibold text-primary underline-offset-4 hover:underline"
+            >
+              Log in
+            </Link>
+          </p>
+        </div>
+
+        <Link
+          href="/"
+          className="mx-auto mt-6 flex w-fit items-center gap-2 text-sm font-medium text-text-muted transition-colors hover:text-primary"
+        >
+          <span aria-hidden="true">←</span>
+          Back to home
+        </Link>
       </div>
-    </div>
+    </main>
   );
 }
