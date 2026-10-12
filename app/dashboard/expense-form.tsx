@@ -10,7 +10,7 @@ import { useToast } from "./toast-provider";
 const initialState: ExpenseState = {};
 
 const inputClass =
-  "w-full rounded-lg border border-zinc-300 bg-white px-3 py-2 text-sm text-zinc-900 placeholder:text-zinc-400 focus:border-zinc-900 focus:outline-none focus:ring-1 focus:ring-zinc-900 dark:border-zinc-700 dark:bg-zinc-950 dark:text-zinc-100";
+  "w-full rounded-button border border-border bg-surface px-3 py-2 text-sm text-text placeholder:text-text-muted focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary";
 
 function SaveButton() {
   const { pending } = useFormStatus();
@@ -18,7 +18,7 @@ function SaveButton() {
     <button
       type="submit"
       disabled={pending}
-      className="rounded-lg bg-zinc-900 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-zinc-700 disabled:cursor-not-allowed disabled:opacity-60 dark:bg-white dark:text-zinc-900 dark:hover:bg-zinc-200"
+      className="rounded-button bg-primary px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-primary-hover disabled:cursor-not-allowed disabled:opacity-60"
     >
       {pending ? "Saving..." : "Save expense"}
     </button>
@@ -44,9 +44,19 @@ export function AddExpenseForm() {
       <button
         type="button"
         onClick={() => setOpen(true)}
-        className="rounded-lg bg-zinc-900 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-zinc-700 dark:bg-white dark:text-zinc-900 dark:hover:bg-zinc-200"
+        className="inline-flex items-center gap-2 rounded-button bg-primary px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-primary-hover"
       >
-        + Add expense
+        <svg
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="2"
+          strokeLinecap="round"
+          className="h-4 w-4"
+        >
+          <path d="M12 5v14M5 12h14" />
+        </svg>
+        Add expense
       </button>
     );
   }
@@ -55,12 +65,12 @@ export function AddExpenseForm() {
     <form
       ref={formRef}
       action={formAction}
-      className="mt-4 grid gap-3 sm:grid-cols-2"
+      className="mt-4 grid gap-3 rounded-card border border-border bg-surface-muted/50 p-4 sm:grid-cols-2"
     >
       <div className="space-y-1.5">
         <label
           htmlFor="title"
-          className="block text-xs font-medium text-zinc-600 dark:text-zinc-400"
+          className="block text-xs font-medium text-text-muted"
         >
           Description
         </label>
@@ -76,7 +86,7 @@ export function AddExpenseForm() {
       <div className="space-y-1.5">
         <label
           htmlFor="amount"
-          className="block text-xs font-medium text-zinc-600 dark:text-zinc-400"
+          className="block text-xs font-medium text-text-muted"
         >
           Amount (₦)
         </label>
@@ -95,7 +105,7 @@ export function AddExpenseForm() {
       <div className="space-y-1.5">
         <label
           htmlFor="category"
-          className="block text-xs font-medium text-zinc-600 dark:text-zinc-400"
+          className="block text-xs font-medium text-text-muted"
         >
           Category
         </label>
@@ -115,7 +125,7 @@ export function AddExpenseForm() {
       <div className="space-y-1.5">
         <label
           htmlFor="spentOn"
-          className="block text-xs font-medium text-zinc-600 dark:text-zinc-400"
+          className="block text-xs font-medium text-text-muted"
         >
           Date
         </label>
@@ -130,7 +140,7 @@ export function AddExpenseForm() {
       </div>
 
       {state.error && (
-        <p className="rounded-lg bg-red-50 px-3 py-2 text-sm text-red-600 sm:col-span-2 dark:bg-red-950/50 dark:text-red-400">
+        <p className="rounded-button bg-expense/10 px-3 py-2 text-sm text-expense sm:col-span-2">
           {state.error}
         </p>
       )}
@@ -140,7 +150,7 @@ export function AddExpenseForm() {
         <button
           type="button"
           onClick={() => setOpen(false)}
-          className="rounded-lg border border-zinc-300 px-4 py-2 text-sm font-medium text-zinc-700 transition-colors hover:bg-zinc-100 dark:border-zinc-700 dark:text-zinc-200 dark:hover:bg-zinc-800"
+          className="rounded-button border border-border px-4 py-2 text-sm font-medium text-text transition-colors hover:bg-surface-muted"
         >
           Cancel
         </button>

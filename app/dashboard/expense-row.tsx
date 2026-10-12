@@ -3,7 +3,7 @@
 import { useActionState, useEffect, useRef, useState } from "react";
 import { useFormStatus } from "react-dom";
 import { updateExpense, type ExpenseState } from "@/lib/actions/expenses";
-import { CATEGORIES } from "@/lib/expense-categories";
+import { CATEGORIES, CATEGORY_COLORS } from "@/lib/expense-categories";
 import {
   formatShortNaira,
   toDateInputValue,
@@ -22,13 +22,31 @@ export type Expense = {
 const initialState: ExpenseState = {};
 
 const inputClass =
-  "w-full rounded-lg border border-zinc-300 bg-white px-3 py-2 text-sm text-zinc-900 placeholder:text-zinc-400 focus:border-zinc-900 focus:outline-none focus:ring-1 focus:ring-zinc-900 dark:border-zinc-700 dark:bg-zinc-950 dark:text-zinc-100";
+  "w-full rounded-button border border-border bg-surface px-3 py-2 text-sm text-text placeholder:text-text-muted focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary";
 
-const actionClass =
-  "rounded-lg border border-zinc-300 px-3 py-1.5 text-xs font-medium text-zinc-700 transition-colors hover:bg-zinc-100 dark:border-zinc-700 dark:text-zinc-200 dark:hover:bg-zinc-800";
+const labelClass = "block text-xs font-medium text-text-muted";
 
-const cellClass =
-  "border-b border-zinc-200 px-3 py-3 dark:border-zinc-800";
+const primaryButtonClass =
+  "rounded-button bg-primary px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-primary-hover disabled:cursor-not-allowed disabled:opacity-60";
+
+const secondaryButtonClass =
+  "rounded-button border border-border px-4 py-2 text-sm font-medium text-text transition-colors hover:bg-surface-muted disabled:opacity-60";
+
+const dangerButtonClass =
+  "rounded-button border border-expense/30 px-3 py-1.5 text-xs font-medium text-expense transition-colors hover:bg-expense/10";
+
+function CategoryBadge({ category }: { category: string }) {
+  return (
+    <span className="inline-flex items-center gap-1.5 rounded-full bg-surface-muted px-2.5 py-1 text-xs font-medium text-text">
+      <span
+        className={`h-2 w-2 rounded-full ${
+          CATEGORY_COLORS[category] ?? "bg-text-muted"
+        }`}
+      />
+      {category}
+    </span>
+  );
+}
 
 function SubmitButton({
   children,
@@ -47,14 +65,13 @@ function SubmitButton({
   );
 }
 
-export function ExpenseRow({
+function ExpenseEditForm({
   expense,
-  onDelete,
+  onCancel,
 }: {
   expense: Expense;
-  onDelete: () => void;
+  onCancel: () => void;
 }) {
-  const [editing, setEditing] = useState(false);
   const [state, formAction, pending] = useActionState(
     updateExpense,
     initialState
@@ -65,152 +82,203 @@ export function ExpenseRow({
   useEffect(() => {
     if (!state.nonce || handledNonce.current === state.nonce) return;
     handledNonce.current = state.nonce;
-    setEditing(false);
     if (state.message) notify(state.message);
-  }, [state.nonce, state.message, notify]);
+    onCancel();
+  }, [state.nonce, state.message, notify, onCancel]);
+
+  return (
+    <form action={formAction} className="grid gap-3 sm:grid-cols-2">
+      <input type="hidden" name="id" value={expense.id} />
+      <div className="space-y-1.5">
+        <label htmlFor={`title-${expense.id}`} className={labelClass}>
+          Description
+        </label>
+        <input
+          id={`title-${expense.id}`}
+          name="title"
+          type="text"
+          required
+          defaultValue={expense.title}
+          className={inputClass}
+        />
+      </div>
+      <div className="space-y-1.5">
+        <label htmlFor={`amount-${expense.id}`} className={labelClass}>
+          Amount (₦)
+        </label>
+        <input
+          id={`amount-${expense.id}`}
+          name="amount"
+          type="number"
+          inputMode="decimal"
+          min="0.01"
+          step="0.01"
+          required
+          defaultValue={expense.amount}
+          className={inputClass}
+        />
+      </div>
+      <div className="space-y-1.5">
+        <label htmlFor={`category-${expense.id}`} className={labelClass}>
+          Category
+        </label>
+        <select
+          id={`category-${expense.id}`}
+          name="category"
+          defaultValue={expense.category}
+          className={inputClass}
+        >
+          {CATEGORIES.map((c) => (
+            <option key={c} value={c}>
+              {c}
+            </option>
+          ))}
+        </select>
+      </div>
+      <div className="space-y-1.5">
+        <label htmlFor={`spentOn-${expense.id}`} className={labelClass}>
+          Date
+        </label>
+        <input
+          id={`spentOn-${expense.id}`}
+          name="spentOn"
+          type="date"
+          max={todayInputValue()}
+          defaultValue={toDateInputValue(expense.spent_on)}
+          className={inputClass}
+        />
+      </div>
+
+      {state.error && (
+        <p className="rounded-button bg-expense/10 px-3 py-2 text-sm text-expense sm:col-span-2">
+          {state.error}
+        </p>
+      )}
+
+      <div className="flex gap-2 sm:col-span-2">
+        <SubmitButton
+          pendingLabel="Saving..."
+          className={primaryButtonClass}
+        >
+          Save
+        </SubmitButton>
+        <button
+          type="button"
+          onClick={onCancel}
+          disabled={pending}
+          className={secondaryButtonClass}
+        >
+          Cancel
+        </button>
+      </div>
+    </form>
+  );
+}
+
+export function ExpenseRow({
+  expense,
+  onDelete,
+}: {
+  expense: Expense;
+  onDelete: () => void;
+}) {
+  const [editing, setEditing] = useState(false);
 
   if (editing) {
     return (
-      <>
-        <tr className="bg-zinc-50 dark:bg-zinc-950">
-          <td colSpan={5} className="px-3 py-4">
-            <form action={formAction} className="grid gap-3 sm:grid-cols-2">
-              <input type="hidden" name="id" value={expense.id} />
-              <div className="space-y-1.5">
-                <label
-                  htmlFor={`title-${expense.id}`}
-                  className="block text-xs font-medium text-zinc-600 dark:text-zinc-400"
-                >
-                  Description
-                </label>
-                <input
-                  id={`title-${expense.id}`}
-                  name="title"
-                  type="text"
-                  required
-                  defaultValue={expense.title}
-                  className={inputClass}
-                />
-              </div>
-              <div className="space-y-1.5">
-                <label
-                  htmlFor={`amount-${expense.id}`}
-                  className="block text-xs font-medium text-zinc-600 dark:text-zinc-400"
-                >
-                  Amount (₦)
-                </label>
-                <input
-                  id={`amount-${expense.id}`}
-                  name="amount"
-                  type="number"
-                  inputMode="decimal"
-                  min="0.01"
-                  step="0.01"
-                  required
-                  defaultValue={expense.amount}
-                  className={inputClass}
-                />
-              </div>
-              <div className="space-y-1.5">
-                <label
-                  htmlFor={`category-${expense.id}`}
-                  className="block text-xs font-medium text-zinc-600 dark:text-zinc-400"
-                >
-                  Category
-                </label>
-                <select
-                  id={`category-${expense.id}`}
-                  name="category"
-                  defaultValue={expense.category}
-                  className={inputClass}
-                >
-                  {CATEGORIES.map((c) => (
-                    <option key={c} value={c}>
-                      {c}
-                    </option>
-                  ))}
-                </select>
-              </div>
-              <div className="space-y-1.5">
-                <label
-                  htmlFor={`spentOn-${expense.id}`}
-                  className="block text-xs font-medium text-zinc-600 dark:text-zinc-400"
-                >
-                  Date
-                </label>
-                <input
-                  id={`spentOn-${expense.id}`}
-                  name="spentOn"
-                  type="date"
-                  max={todayInputValue()}
-                  defaultValue={toDateInputValue(expense.spent_on)}
-                  className={inputClass}
-                />
-              </div>
-
-              {state.error && (
-                <p className="rounded-lg bg-red-50 px-3 py-2 text-sm text-red-600 sm:col-span-2 dark:bg-red-950/50 dark:text-red-400">
-                  {state.error}
-                </p>
-              )}
-
-              <div className="flex gap-2 sm:col-span-2">
-                <SubmitButton
-                  pendingLabel="Saving..."
-                  className="rounded-lg bg-zinc-900 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-zinc-700 disabled:cursor-not-allowed disabled:opacity-60 dark:bg-white dark:text-zinc-900 dark:hover:bg-zinc-200"
-                >
-                  Save
-                </SubmitButton>
-                <button
-                  type="button"
-                  onClick={() => setEditing(false)}
-                  disabled={pending}
-                  className="rounded-lg border border-zinc-300 px-4 py-2 text-sm font-medium text-zinc-700 transition-colors hover:bg-zinc-100 disabled:opacity-60 dark:border-zinc-700 dark:text-zinc-200 dark:hover:bg-zinc-800"
-                >
-                  Cancel
-                </button>
-              </div>
-            </form>
-          </td>
-        </tr>
-      </>
+      <tr className="bg-surface-muted/40">
+        <td colSpan={5} className="px-3 py-4">
+          <ExpenseEditForm
+            expense={expense}
+            onCancel={() => setEditing(false)}
+          />
+        </td>
+      </tr>
     );
   }
 
   return (
-    <>
-      <tr className="hover:bg-zinc-50 dark:hover:bg-zinc-950/50">
-        <td className={`${cellClass} font-medium`}>
-          <p className="truncate">{expense.title}</p>
-        </td>
-        <td className={`${cellClass} text-zinc-500 dark:text-zinc-400`}>
-          {toDateInputValue(expense.spent_on)}
-        </td>
-        <td className={`${cellClass} text-zinc-500 dark:text-zinc-400`}>
-          {expense.category}
-        </td>
-        <td className={`${cellClass} text-right font-semibold tabular-nums`}>
-          {formatShortNaira(expense.amount)}
-        </td>
-        <td className={cellClass}>
-          <div className="flex items-center justify-end gap-2">
+    <tr className="transition-colors hover:bg-surface-muted/50">
+      <td className="border-b border-border px-3 py-3 font-medium text-text">
+        <p className="truncate">{expense.title}</p>
+      </td>
+      <td className="border-b border-border px-3 py-3 text-text-muted">
+        {toDateInputValue(expense.spent_on)}
+      </td>
+      <td className="border-b border-border px-3 py-3">
+        <CategoryBadge category={expense.category} />
+      </td>
+      <td className="border-b border-border px-3 py-3 text-right font-semibold tabular-nums text-text">
+        {formatShortNaira(expense.amount)}
+      </td>
+      <td className="border-b border-border px-3 py-3">
+        <div className="flex items-center justify-end gap-2">
+          <button
+            type="button"
+            onClick={() => setEditing(true)}
+            className="rounded-button border border-border px-3 py-1.5 text-xs font-medium text-text transition-colors hover:bg-surface-muted"
+          >
+            Edit
+          </button>
+          <button type="button" onClick={onDelete} className={dangerButtonClass}>
+            Delete
+          </button>
+        </div>
+      </td>
+    </tr>
+  );
+}
+
+export function ExpenseCard({
+  expense,
+  onDelete,
+}: {
+  expense: Expense;
+  onDelete: () => void;
+}) {
+  const [editing, setEditing] = useState(false);
+
+  return (
+    <li className="rounded-card border border-border bg-surface p-4 shadow-sm">
+      {editing ? (
+        <ExpenseEditForm
+          expense={expense}
+          onCancel={() => setEditing(false)}
+        />
+      ) : (
+        <>
+          <div className="flex items-start justify-between gap-3">
+            <div className="min-w-0">
+              <p className="truncate font-medium text-text">{expense.title}</p>
+              <div className="mt-2 flex flex-wrap items-center gap-2">
+                <CategoryBadge category={expense.category} />
+                <span className="text-xs text-text-muted">
+                  {toDateInputValue(expense.spent_on)}
+                </span>
+              </div>
+            </div>
+            <p className="flex-none font-semibold tabular-nums text-text">
+              {formatShortNaira(expense.amount)}
+            </p>
+          </div>
+          <div className="mt-3 flex gap-2 border-t border-border pt-3">
             <button
               type="button"
               onClick={() => setEditing(true)}
-              className={actionClass}
+              className="flex-1 rounded-button border border-border px-3 py-2 text-xs font-medium text-text transition-colors hover:bg-surface-muted"
             >
               Edit
             </button>
             <button
               type="button"
               onClick={onDelete}
-              className="rounded-lg border border-red-200 px-3 py-1.5 text-xs font-medium text-red-600 transition-colors hover:bg-red-50 dark:border-red-900 dark:text-red-400 dark:hover:bg-red-950"
+              className="flex-1 rounded-button border border-expense/30 px-3 py-2 text-xs font-medium text-expense transition-colors hover:bg-expense/10"
             >
               Delete
             </button>
           </div>
-        </td>
-      </tr>
-    </>
+        </>
+      )}
+    </li>
   );
 }

@@ -10,10 +10,9 @@ import { useToast } from "./toast-provider";
 type Confidence = ExpenseSummary["confidence"];
 
 const CONFIDENCE_STYLES: Record<Confidence, string> = {
-  high: "border-emerald-200 bg-emerald-50 text-emerald-700 dark:border-emerald-900 dark:bg-emerald-950 dark:text-emerald-300",
-  medium:
-    "border-amber-200 bg-amber-50 text-amber-700 dark:border-amber-900 dark:bg-amber-950 dark:text-amber-300",
-  low: "border-zinc-200 bg-zinc-50 text-zinc-600 dark:border-zinc-800 dark:bg-zinc-800/60 dark:text-zinc-400",
+  high: "border-primary/20 bg-surface-muted text-primary",
+  medium: "border-warning/30 bg-warning/10 text-warning",
+  low: "border-border bg-surface-muted text-text-muted",
 };
 
 const CONFIDENCE_LABELS: Record<Confidence, string> = {
@@ -57,19 +56,36 @@ export function ExpenseSummaryCard({ monthLabel }: ExpenseSummaryCardProps) {
   const showHint = !pending && !summary && !error;
 
   return (
-    <section className="rounded-3xl border border-zinc-200 bg-white p-6 shadow-sm dark:border-zinc-800 dark:bg-zinc-900">
+    <section className="rounded-card border border-border bg-surface p-5 shadow-sm sm:p-6">
       <div className="flex flex-wrap items-center justify-between gap-3">
-        <div>
-          <h2 className="text-lg font-semibold tracking-tight">AI summary</h2>
-          <p className="text-sm text-zinc-500 dark:text-zinc-400">
-            A short read on your {monthLabel} spending
-          </p>
+        <div className="flex items-center gap-3">
+          <span className="flex h-10 w-10 flex-none items-center justify-center rounded-button bg-surface-muted text-primary">
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              className="h-5 w-5"
+            >
+              <path d="M12 3v4m0 10v4M3 12h4m10 0h4M6 6l2.5 2.5M15.5 15.5 18 18M18 6l-2.5 2.5M8.5 15.5 6 18" />
+            </svg>
+          </span>
+          <div>
+            <h2 className="text-base font-semibold tracking-tight text-text">
+              AI summary
+            </h2>
+            <p className="text-sm text-text-muted">
+              A short read on your {monthLabel} spending
+            </p>
+          </div>
         </div>
         <button
           type="button"
           onClick={handleGenerate}
           disabled={pending}
-          className="rounded-lg bg-zinc-900 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-zinc-700 disabled:cursor-not-allowed disabled:opacity-60 dark:bg-white dark:text-zinc-900 dark:hover:bg-zinc-200"
+          className="rounded-button bg-primary px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-primary-hover disabled:cursor-not-allowed disabled:opacity-60"
         >
           {buttonLabel}
         </button>
@@ -77,33 +93,33 @@ export function ExpenseSummaryCard({ monthLabel }: ExpenseSummaryCardProps) {
 
       <div className="mt-4 space-y-4">
         {showHint && (
-          <p className="text-sm text-zinc-500 dark:text-zinc-400">
+          <p className="text-sm text-text-muted">
             Generate a neutral, factual overview of this month&apos;s spending,
             including one area worth reviewing.
           </p>
         )}
 
         {pending && !summary && (
-          <p className="text-sm text-zinc-500 dark:text-zinc-400">
+          <p className="text-sm text-text-muted">
             Reading your expenses and drafting a summary...
           </p>
         )}
 
         {error && (
-          <p className="rounded-lg bg-red-50 px-3 py-2 text-sm text-red-600 dark:bg-red-950/50 dark:text-red-400">
+          <p className="rounded-button bg-expense/10 px-3 py-2 text-sm text-expense">
             {error}
           </p>
         )}
 
         {summary && (
           <>
-            <p className="text-sm leading-relaxed text-zinc-700 dark:text-zinc-300">
+            <p className="text-sm leading-relaxed text-text">
               {summary.summary}
             </p>
 
             <div className="flex flex-wrap items-center gap-2">
               {summary.improvement_area && (
-                <span className="inline-flex items-center rounded-full border border-zinc-200 px-2.5 py-1 text-xs font-medium text-zinc-700 dark:border-zinc-700 dark:text-zinc-200">
+                <span className="inline-flex items-center rounded-full border border-border px-2.5 py-1 text-xs font-medium text-text">
                   Area to review: {summary.improvement_area}
                 </span>
               )}
@@ -115,12 +131,12 @@ export function ExpenseSummaryCard({ monthLabel }: ExpenseSummaryCardProps) {
             </div>
 
             {summary.improvement_reason && (
-              <p className="text-xs text-zinc-500 dark:text-zinc-400">
+              <p className="text-xs text-text-muted">
                 {summary.improvement_reason}
               </p>
             )}
 
-            <p className="text-xs text-zinc-400 dark:text-zinc-500">
+            <p className="text-xs text-text-muted">
               Generated by AI from your recorded expenses only. It is not
               financial advice.
             </p>

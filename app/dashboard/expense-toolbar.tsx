@@ -8,7 +8,7 @@ import { buildFilterHref, type ExpenseQuery } from "@/lib/expense-query";
 const DEBOUNCE_MS = 300;
 
 const inputClass =
-  "w-full rounded-lg border border-zinc-300 bg-white px-3 py-2 text-sm text-zinc-900 placeholder:text-zinc-400 focus:border-zinc-900 focus:outline-none focus:ring-1 focus:ring-zinc-900 dark:border-zinc-700 dark:bg-zinc-950 dark:text-zinc-100";
+  "w-full rounded-button border border-border bg-surface px-3 py-2 text-sm text-text placeholder:text-text-muted focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary";
 
 export function ExpenseToolbar({ query }: { query: ExpenseQuery }) {
   const router = useRouter();
@@ -70,7 +70,7 @@ export function ExpenseToolbar({ query }: { query: ExpenseQuery }) {
               onMouseDown={(event) => event.preventDefault()}
               onClick={() => setSearch("")}
               aria-label="Clear search"
-              className="absolute top-1/2 right-2 -translate-y-1/2 rounded-md px-1.5 text-sm text-zinc-400 transition-colors hover:text-zinc-700 dark:hover:text-zinc-200"
+              className="absolute top-1/2 right-2 -translate-y-1/2 rounded-md px-1.5 text-sm text-text-muted transition-colors hover:text-text"
             >
               &times;
             </button>
@@ -106,7 +106,7 @@ export function ExpenseToolbar({ query }: { query: ExpenseQuery }) {
                 scroll: false,
               });
             }}
-            className="rounded-lg border border-zinc-300 px-4 py-2 text-sm font-medium text-zinc-700 transition-colors hover:bg-zinc-100 dark:border-zinc-700 dark:text-zinc-200 dark:hover:bg-zinc-800"
+            className="rounded-button border border-border px-4 py-2 text-sm font-medium text-text transition-colors hover:bg-surface-muted"
           >
             Clear filters
           </button>
@@ -114,7 +114,7 @@ export function ExpenseToolbar({ query }: { query: ExpenseQuery }) {
       </div>
 
       {query.search && (
-        <p className="text-xs text-zinc-500 dark:text-zinc-400">
+        <p className="text-xs text-text-muted">
           Showing results for &quot;{query.search}&quot;
           {query.category ? ` in ${query.category}` : ""}.
         </p>

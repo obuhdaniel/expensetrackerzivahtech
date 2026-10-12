@@ -10,16 +10,16 @@ type PaginationProps = {
 };
 
 const linkClass =
-  "inline-flex h-8 min-w-8 items-center justify-center rounded-lg px-2 text-sm font-medium transition-colors";
+  "inline-flex h-8 min-w-8 items-center justify-center rounded-button px-2 text-sm font-medium transition-colors";
 
 function itemClass(active: boolean, disabled = false) {
   if (disabled) {
-    return `${linkClass} cursor-not-allowed border border-zinc-200 text-zinc-300 dark:border-zinc-800 dark:text-zinc-600`;
+    return `${linkClass} cursor-not-allowed border border-border text-text-muted/50`;
   }
   if (active) {
-    return `${linkClass} border border-zinc-900 bg-zinc-900 text-white dark:border-white dark:bg-white dark:text-zinc-900`;
+    return `${linkClass} border border-primary bg-primary text-white`;
   }
-  return `${linkClass} border border-zinc-300 bg-white text-zinc-700 transition-colors hover:bg-zinc-100 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-200 dark:hover:bg-zinc-800`;
+  return `${linkClass} border border-border bg-surface text-text transition-colors hover:bg-surface-muted`;
 }
 
 export function Pagination({
@@ -36,7 +36,7 @@ export function Pagination({
 
   return (
     <div className="flex flex-col items-center justify-between gap-3 sm:flex-row">
-      <p className="text-xs text-zinc-500 dark:text-zinc-400">
+      <p className="text-xs text-text-muted">
         Showing <span className="font-medium">{first}</span>–
         <span className="font-medium">{last}</span> of{" "}
         <span className="font-medium">{count}</span>

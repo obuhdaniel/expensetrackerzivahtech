@@ -17,10 +17,8 @@ type ToastContextValue = {
 const ToastContext = createContext<ToastContextValue | null>(null);
 
 const TONE_STYLES: Record<ToastTone, string> = {
-  success:
-    "border-emerald-200 bg-emerald-50 text-emerald-800 dark:border-emerald-900 dark:bg-emerald-950 dark:text-emerald-200",
-  error:
-    "border-red-200 bg-red-50 text-red-700 dark:border-red-900 dark:bg-red-950 dark:text-red-300",
+  success: "border-primary/20 bg-surface text-primary",
+  error: "border-expense/30 bg-surface text-expense",
 };
 
 const AUTO_DISMISS_MS = 4000;
@@ -55,7 +53,7 @@ export function ToastProvider({ children }: { children: React.ReactNode }) {
           <div
             key={toast.id}
             role="status"
-            className={`pointer-events-auto flex w-full max-w-sm items-start gap-3 rounded-2xl border px-4 py-3 text-sm shadow-lg ${TONE_STYLES[toast.tone]}`}
+            className={`pointer-events-auto flex w-full max-w-sm items-start gap-3 rounded-card border px-4 py-3 text-sm shadow-lg ${TONE_STYLES[toast.tone]}`}
           >
             <span className="flex-1">{toast.message}</span>
             <button

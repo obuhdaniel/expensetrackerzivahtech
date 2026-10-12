@@ -33,47 +33,47 @@ export default async function ProfilePage() {
   return (
     <div className="mx-auto max-w-2xl space-y-6">
       <div>
-        <h1 className="text-2xl font-semibold tracking-tight">Profile</h1>
-        <p className="text-sm text-zinc-500 dark:text-zinc-400">
-          Your account information
-        </p>
+        <h1 className="text-2xl font-bold tracking-tight text-text sm:text-3xl">
+          Profile
+        </h1>
+        <p className="mt-1 text-sm text-text-muted">Your account information</p>
       </div>
 
-      <div className="rounded-3xl border border-zinc-200 bg-white p-6 shadow-sm dark:border-zinc-800 dark:bg-zinc-900">
+      <div className="rounded-card border border-border bg-surface p-5 shadow-sm sm:p-6">
         <div className="flex items-center gap-4">
-          <div className="flex h-14 w-14 items-center justify-center rounded-full bg-zinc-900 text-lg font-semibold text-white dark:bg-white dark:text-zinc-900">
+          <div className="flex h-14 w-14 items-center justify-center rounded-full bg-primary text-lg font-semibold text-white">
             {initials}
           </div>
-          <div>
-            <h2 className="text-xl font-semibold tracking-tight">{name}</h2>
-            <p className="text-sm text-zinc-500 dark:text-zinc-400">
-              {user.email}
-            </p>
+          <div className="min-w-0">
+            <h2 className="truncate text-xl font-semibold tracking-tight text-text">
+              {name}
+            </h2>
+            <p className="truncate text-sm text-text-muted">{user.email}</p>
           </div>
         </div>
 
         <div className="mt-6 grid gap-4 sm:grid-cols-2">
-          <div className="rounded-2xl border border-zinc-200 bg-zinc-50 p-4 dark:border-zinc-800 dark:bg-zinc-950">
-            <p className="text-xs font-medium uppercase tracking-wider text-zinc-500 dark:text-zinc-400">
+          <div className="rounded-card border border-border bg-surface-muted p-4">
+            <p className="text-xs font-medium uppercase tracking-wider text-text-muted">
               Full name
             </p>
-            <p className="mt-1 text-sm font-medium">{name}</p>
+            <p className="mt-1 text-sm font-medium text-text">{name}</p>
           </div>
-          <div className="rounded-2xl border border-zinc-200 bg-zinc-50 p-4 dark:border-zinc-800 dark:bg-zinc-950">
-            <p className="text-xs font-medium uppercase tracking-wider text-zinc-500 dark:text-zinc-400">
+          <div className="rounded-card border border-border bg-surface-muted p-4">
+            <p className="text-xs font-medium uppercase tracking-wider text-text-muted">
               Date of birth
             </p>
-            <p className="mt-1 text-sm font-medium">
+            <p className="mt-1 text-sm font-medium text-text">
               {profile?.date_of_birth
                 ? formatDate(profile.date_of_birth)
                 : "Not set"}
             </p>
           </div>
-          <div className="rounded-2xl border border-zinc-200 bg-zinc-50 p-4 sm:col-span-2 dark:border-zinc-800 dark:bg-zinc-950">
-            <p className="text-xs font-medium uppercase tracking-wider text-zinc-500 dark:text-zinc-400">
+          <div className="rounded-card border border-border bg-surface-muted p-4 sm:col-span-2">
+            <p className="text-xs font-medium uppercase tracking-wider text-text-muted">
               Member since
             </p>
-            <p className="mt-1 text-sm font-medium">
+            <p className="mt-1 text-sm font-medium text-text">
               {user.created_at ? formatDate(user.created_at) : "—"}
             </p>
           </div>

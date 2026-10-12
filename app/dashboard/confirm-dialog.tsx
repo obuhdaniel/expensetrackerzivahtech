@@ -65,7 +65,7 @@ export function ConfirmDialog({
       onClick={(event) => {
         if (event.target === dialogRef.current) handleClose();
       }}
-      className="m-auto w-[calc(100vw-2rem)] max-w-sm rounded-3xl border border-zinc-200 bg-white p-0 text-zinc-900 shadow-xl backdrop:bg-zinc-950/50 dark:border-zinc-800 dark:bg-zinc-900 dark:text-zinc-100"
+      className="m-auto w-[calc(100vw-2rem)] max-w-sm rounded-card border border-border bg-surface p-0 text-text shadow-xl backdrop:bg-forest/40 backdrop:backdrop-blur-sm"
     >
       <div className="space-y-4 p-6">
         <div>
@@ -75,13 +75,13 @@ export function ConfirmDialog({
           >
             {title}
           </h2>
-          <p className="mt-1 text-sm text-zinc-500 dark:text-zinc-400">
+          <p className="mt-1 text-sm text-text-muted">
             {message}
           </p>
         </div>
 
         {error && (
-          <p className="rounded-lg bg-red-50 px-3 py-2 text-sm text-red-600 dark:bg-red-950/50 dark:text-red-400">
+          <p className="rounded-button bg-expense/10 px-3 py-2 text-sm text-expense">
             {error}
           </p>
         )}
@@ -91,7 +91,7 @@ export function ConfirmDialog({
             type="button"
             onClick={handleClose}
             disabled={pending}
-            className="rounded-lg border border-zinc-300 px-4 py-2 text-sm font-medium text-zinc-700 transition-colors hover:bg-zinc-100 disabled:opacity-60 dark:border-zinc-700 dark:text-zinc-200 dark:hover:bg-zinc-800"
+            className="rounded-button border border-border px-4 py-2 text-sm font-medium text-text transition-colors hover:bg-surface-muted disabled:opacity-60"
           >
             {cancelLabel}
           </button>
@@ -99,7 +99,7 @@ export function ConfirmDialog({
             type="button"
             onClick={handleConfirm}
             disabled={pending}
-            className="rounded-lg bg-red-600 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-red-500 disabled:cursor-not-allowed disabled:opacity-60"
+            className="rounded-button bg-expense px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-expense/90 disabled:cursor-not-allowed disabled:opacity-60"
           >
             {pending ? pendingLabel : confirmLabel}
           </button>

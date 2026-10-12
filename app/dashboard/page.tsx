@@ -23,20 +23,10 @@ import {
   formatNaira,
   toDateInputValue,
 } from "@/lib/format";
+import { CATEGORY_COLORS } from "@/lib/expense-categories";
 
 export const metadata: Metadata = {
   title: "Dashboard",
-};
-
-const CATEGORY_COLORS: Record<string, string> = {
-  Food: "bg-emerald-500",
-  Transport: "bg-sky-500",
-  Rent: "bg-violet-500",
-  Utilities: "bg-amber-500",
-  Shopping: "bg-pink-500",
-  Health: "bg-rose-500",
-  Entertainment: "bg-indigo-500",
-  Other: "bg-zinc-400",
 };
 
 function sortHrefsFor(
@@ -160,109 +150,146 @@ export default async function DashboardPage({ searchParams }: PageProps<"/dashbo
   const sortHrefs = sortHrefsFor(query);
 
   return (
-    <div className="mx-auto max-w-5xl space-y-6">
+    <div className="space-y-6">
+      <div>
+        <h1 className="text-2xl font-bold tracking-tight text-text sm:text-3xl">
+          Dashboard
+        </h1>
+        <p className="mt-1 text-sm text-text-muted">
+          Your spending at a glance · {monthLabel}
+        </p>
+      </div>
 
-
-          <div className="grid gap-4 sm:grid-cols-2">
-            <div className="rounded-3xl border border-zinc-200 bg-white p-6 shadow-sm dark:border-zinc-800 dark:bg-zinc-900">
-              <p className="text-xs font-medium uppercase tracking-wider text-zinc-400 dark:text-zinc-500">
-                {isFiltered ? "Matching filters" : `Spent in ${monthLabel}`}
-              </p>
-              <p className="mt-2 text-3xl font-bold tracking-tight">
-                {formatNaira(total)}
-              </p>
-              <p className="mt-1 text-sm text-zinc-500 dark:text-zinc-400">
-                {filteredCount} expense{filteredCount === 1 ? "" : "s"} in{" "}
-                {monthLabel}
-              </p>
-            </div>
-            <div className="rounded-3xl border border-zinc-200 bg-white p-6 shadow-sm dark:border-zinc-800 dark:bg-zinc-900">
-              <p className="text-xs font-medium uppercase tracking-wider text-zinc-400 dark:text-zinc-500">
-                Top category
-              </p>
-              <p className="mt-2 text-3xl font-bold tracking-tight">
-                {breakdown[0]?.[0] ?? "—"}
-              </p>
-              <p className="mt-1 text-sm text-zinc-500 dark:text-zinc-400">
-                {breakdown[0] ? formatNaira(breakdown[0][1]) : "No data yet"}
-              </p>
-            </div>
+      <div className="grid gap-4 sm:grid-cols-2">
+        <div className="rounded-card border border-border bg-surface p-5 shadow-sm sm:p-6">
+          <div className="flex items-center justify-between gap-3">
+            <p className="text-xs font-medium uppercase tracking-wider text-text-muted">
+              {isFiltered ? "Matching filters" : `Spent in ${monthLabel}`}
+            </p>
+            <span className="flex h-9 w-9 items-center justify-center rounded-button bg-surface-muted text-primary">
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                className="h-4 w-4"
+              >
+                <path d="M3 7a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2m0 0v10a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V7m16 5h-5a2 2 0 0 0 0 4h5" />
+              </svg>
+            </span>
           </div>
+          <p className="mt-3 text-3xl font-bold tracking-tight text-text">
+            {formatNaira(total)}
+          </p>
+          <p className="mt-1 text-sm text-text-muted">
+            {filteredCount} expense{filteredCount === 1 ? "" : "s"} in{" "}
+            {monthLabel}
+          </p>
+        </div>
 
-<ExpenseSummaryCard monthLabel={monthLabel} />
+        <div className="rounded-card border border-border bg-surface p-5 shadow-sm sm:p-6">
+          <div className="flex items-center justify-between gap-3">
+            <p className="text-xs font-medium uppercase tracking-wider text-text-muted">
+              Top category
+            </p>
+            <span
+              className={`h-2.5 w-2.5 rounded-full ${
+                breakdown[0]
+                  ? CATEGORY_COLORS[breakdown[0][0]] ?? "bg-text-muted"
+                  : "bg-border"
+              }`}
+            />
+          </div>
+          <p className="mt-3 text-3xl font-bold tracking-tight text-text">
+            {breakdown[0]?.[0] ?? "—"}
+          </p>
+          <p className="mt-1 text-sm text-text-muted">
+            {breakdown[0] ? formatNaira(breakdown[0][1]) : "No data yet"}
+          </p>
+        </div>
+      </div>
 
-          <div className="rounded-3xl border border-zinc-200 bg-white p-6 shadow-sm dark:border-zinc-800 dark:bg-zinc-900">
-            <h2 className="text-lg font-semibold tracking-tight">
+      <ExpenseSummaryCard monthLabel={monthLabel} />
+
+      <div className="rounded-card border border-border bg-surface p-5 shadow-sm sm:p-6">
+        <h2 className="text-base font-semibold tracking-tight text-text">
+          Spending by category
+        </h2>
+        {breakdown.length === 0 ? (
+          <p className="mt-4 text-sm text-text-muted">
+            Add an expense to see the breakdown.
+          </p>
+        ) : (
+          <ul className="mt-5 space-y-4">
+            {breakdown.map(([category, amount]) => {
+              const pct = total > 0 ? (amount / total) * 100 : 0;
+              return (
+                <li key={category}>
+                  <div className="mb-1.5 flex items-center justify-between text-sm">
+                    <span className="flex items-center gap-2 font-medium text-text">
+                      <span
+                        className={`h-2.5 w-2.5 rounded-full ${
+                          CATEGORY_COLORS[category] ?? "bg-text-muted"
+                        }`}
+                      />
+                      {category}
+                    </span>
+                    <span className="text-text-muted">
+                      {formatNaira(amount)} · {pct.toFixed(0)}%
+                    </span>
+                  </div>
+                  <div className="h-2 w-full overflow-hidden rounded-full bg-surface-muted">
+                    <div
+                      className={`h-full rounded-full ${
+                        CATEGORY_COLORS[category] ?? "bg-text-muted"
+                      }`}
+                      style={{ width: `${Math.max(pct, 1)}%` }}
+                    />
+                  </div>
+                </li>
+              );
+            })}
+          </ul>
+        )}
+      </div>
+
+      <div className="rounded-card border border-border bg-surface p-5 shadow-sm sm:p-6">
+        <div className="flex flex-wrap items-center justify-between gap-3">
+          <div>
+            <h2 className="text-base font-semibold tracking-tight text-text">
               Expenses
             </h2>
-            {breakdown.length === 0 ? (
-              <p className="mt-4 text-sm text-zinc-500 dark:text-zinc-400">
-                Add an expense to see the breakdown.
-              </p>
-            ) : (
-              <ul className="mt-4 space-y-3">
-                {breakdown.map(([category, amount]) => {
-                  const pct = total > 0 ? (amount / total) * 100 : 0;
-                  return (
-                    <li key={category}>
-                      <div className="mb-1 flex items-center justify-between text-sm">
-                        <span className="font-medium">{category}</span>
-                        <span className="text-zinc-500 dark:text-zinc-400">
-                          {formatNaira(amount)} · {pct.toFixed(0)}%
-                        </span>
-                      </div>
-                      <div className="h-2 w-full overflow-hidden rounded-full bg-zinc-100 dark:bg-zinc-800">
-                        <div
-                          className={`h-full rounded-full ${
-                            CATEGORY_COLORS[category] ?? "bg-zinc-400"
-                          }`}
-                          style={{ width: `${Math.max(pct, 1)}%` }}
-                        />
-                      </div>
-                    </li>
-                  );
-                })}
-              </ul>
-            )}
+            <p className="text-sm text-text-muted">{monthLabel}</p>
           </div>
-
-          <div className="rounded-3xl border border-zinc-200 bg-white p-6 shadow-sm dark:border-zinc-800 dark:bg-zinc-900">
-            <div className="flex flex-wrap items-center justify-between gap-3">
-              <div>
-                <h2 className="text-lg font-semibold tracking-tight">
-                  Expenses
-                </h2>
-                <p className="text-sm text-zinc-500 dark:text-zinc-400">
-                  {monthLabel}
-                </p>
-              </div>
-              <AddExpenseForm />
-            </div>
-
-            <div className="mt-6">
-              <ExpenseToolbar query={query} />
-            </div>
-
-            <div className="mt-4">
-              <ExpenseTable
-                expenses={expenses}
-                sort={query.sort}
-                dir={query.dir}
-                sortHrefs={sortHrefs}
-                isFiltered={isFiltered}
-              />
-            </div>
-
-            <div className="mt-6">
-              <Pagination
-                page={page}
-                pages={pages}
-                count={filteredCount}
-                perPage={query.perPage}
-                pageHref={(target) => buildExpenseHref(query, { page: target })}
-              />
-            </div>
-          </div>
+          <AddExpenseForm />
         </div>
+
+        <div className="mt-6">
+          <ExpenseToolbar query={query} />
+        </div>
+
+        <div className="mt-4">
+          <ExpenseTable
+            expenses={expenses}
+            sort={query.sort}
+            dir={query.dir}
+            sortHrefs={sortHrefs}
+            isFiltered={isFiltered}
+          />
+        </div>
+
+        <div className="mt-6">
+          <Pagination
+            page={page}
+            pages={pages}
+            count={filteredCount}
+            perPage={query.perPage}
+            pageHref={(target) => buildExpenseHref(query, { page: target })}
+          />
+        </div>
+      </div>
+    </div>
   );
 }
